@@ -1,5 +1,6 @@
 import React, {useState, useContext} from 'react'
 import { GlobalContext } from '../context/GlobalState';
+import { useHistory } from "react-router-dom";
 
 export const AddTransaction = () => {
 
@@ -8,20 +9,23 @@ const [amount, setAmount] = useState(0);
 
 const {addTransaction, transactions} = useContext(GlobalContext);
 
+let history = useHistory();
+
 function generateID() {
-    return Math.max(...transactions.map(o => o.id), 0) + 1 ;
+        return( Math.max(...transactions.map(o => o.id), 0) + 1 )
 }
 
 const onSubmit = e => {
     e.preventDefault();
 
     const newTransaction = {
-        id: 6, 
+        id: generateID(), 
         text,
         amount: +amount
     }
 
     addTransaction(newTransaction)
+    history.push('/transactionList');
 }
 
     return (
