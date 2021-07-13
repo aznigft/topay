@@ -1,11 +1,36 @@
 import './App.css';
-import Todo from './components/Todo';
+import {Header} from './components/Header'
+import {Balance} from './components/Balance.js'
+import {IncomeExpenses} from './components/IncomeExpenses'
+import {TransactionList} from './components/TransactionList'
+import {AddTransaction} from './components/AddTransaction'
+import {GlobalProvider} from './context/GlobalState'
+import {BrowserRouter as Router, Route, Switch} from 'react-router-dom'
+
 
 function App() {
   return (
-    <div className="App">
-      <Todo/>
-    </div>
+    <Router>
+    <GlobalProvider>
+      <Header />
+      <div className="container">
+        <Switch>
+          <Route exact path="/">
+            <Balance />
+          </Route>
+          <Route path="/incomeExpenses">
+            <IncomeExpenses />
+          </Route>
+          <Route path="/transactionList">
+            <TransactionList />
+          </Route>
+          <Route path="/addTransaction">
+            <AddTransaction />
+          </Route>
+        </Switch>
+      </div>
+    </GlobalProvider>
+    </Router>
   );
 }
 
