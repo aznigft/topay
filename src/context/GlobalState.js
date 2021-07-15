@@ -7,7 +7,7 @@ const initialState = {
             id: 0,
             payingAccount: 'User',
             recivingAccount: 'Allegro sp. z o.o.',
-            deadLine: '30.09.2021',
+            deadLine: new Date('2021-09-03T00:00:01'),
             description: 'Transaction id - ASDCZXCASDAD',
             amount: 50,
             currency: 'PLN'
@@ -16,7 +16,7 @@ const initialState = {
             id: 1,
             payingAccount: 'User',
             recivingAccount: 'Inea ',
-            deadLine: '20.07.2021',
+            deadLine: new Date('2021-08-13T00:00:01'),
             description: 'Monthly bill for internet',
             amount: 30,
             currency: 'PLN'
@@ -25,7 +25,7 @@ const initialState = {
             id: 2,
             payingAccount: 'User',
             recivingAccount: 'Stefan Burczymucha',
-            deadLine: '',
+            deadLine: new Date('2021-11-08T00:00:01'),
             description: 'Bill split from last pub visit',
             amount: 13,
             currency: 'EUR'
@@ -34,7 +34,7 @@ const initialState = {
             id: 3,
             payingAccount: 'User',
             recivingAccount: 'Spotify',
-            deadLine: '20.07.2021',
+            deadLine: new Date('2021-08-15T00:00:01'),
             description: 'Aplication subscription',
             amount: 9,
             currency: 'EUR'
@@ -43,7 +43,7 @@ const initialState = {
             id: 4,
             payingAccount: 'User',
             recivingAccount: 'Link 4',
-            deadLine: '20.07.2021',
+            deadLine: new Date('2021-07-30T00:00:01'),
             description: 'Car insurance yearly fee',
             amount: 700,
             currency: 'PLN'

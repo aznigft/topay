@@ -1,221 +1,178 @@
-import React from 'react';
-import clsx from 'clsx';
-import { makeStyles } from '@material-ui/core/styles';
-import IconButton from '@material-ui/core/IconButton';
-import Input from '@material-ui/core/Input';
-import FilledInput from '@material-ui/core/FilledInput';
-import OutlinedInput from '@material-ui/core/OutlinedInput';
-import InputLabel from '@material-ui/core/InputLabel';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
+import React, {useState, useContext} from 'react'
+import Button from '@material-ui/core/Button';
+import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
+import Container from '@material-ui/core/Container';
+import { GlobalContext } from '../context/GlobalState';
+import { useHistory } from "react-router-dom";
+
 
 const useStyles = makeStyles((theme) => ({
-  root: {
+  paper: {
+    marginTop: theme.spacing(8),
     display: 'flex',
-    flexWrap: 'wrap',
+    flexDirection: 'column',
+    alignItems: 'center',
   },
-  margin: {
+  avatar: {
     margin: theme.spacing(1),
+    backgroundColor: theme.palette.secondary.main,
   },
-  withoutLabel: {
+  form: {
+    width: '100%', // Fix IE 11 issue.
     marginTop: theme.spacing(3),
   },
-  textField: {
-    width: '25ch',
+  submit: {
+    margin: theme.spacing(3, 0, 2),
   },
 }));
 
 export default function EditTransaction() {
   const classes = useStyles();
-  const [values, setValues] = React.useState({
-    amount: '',
-    password: '',
-    weight: '',
-    weightRange: '',
-    showPassword: false,
-  });
 
-  const handleChange = (prop) => (event) => {
-    setValues({ ...values, [prop]: event.target.value });
-  };
+  const [payingAccount, setPayingAccount] = useState('Myself');
+  const [recivingAccount, setRecivingAccount] = useState('');
+  const [description, setDescription] = useState('');
+  const [deadline, setDeadline] = useState(new Date());
+  const [amount, setAmount] = useState(0);
+  const [currency, setCurrency] = useState('');
 
-  const handleClickShowPassword = () => {
-    setValues({ ...values, showPassword: !values.showPassword });
-  };
+  const {addTransaction, transactions} = useContext(GlobalContext);
 
-  const handleMouseDownPassword = (event) => {
-    event.preventDefault();
-  };
+  let history = useHistory();
+
+  function generateID() {
+    return( Math.max(...transactions.map(o => o.id), 0) + 1 )
+  }
+
+  const onSubmit = e => {
+    e.preventDefault();
+
+    const newTransaction = {
+        id: generateID(), 
+        payingAccount: payingAccount,
+        recivingAccount: recivingAccount,
+        description: description,
+        deadLine: deadline,
+        amount: +amount,
+        currency: currency
+    }
+
+    addTransaction(newTransaction)
+    history.push('/transactionList');
+  }
+
 
   return (
-    <div className={classes.root}>
-      <div>
-        <TextField
-          label="With normal TextField"
-          id="standard-start-adornment"
-          className={clsx(classes.margin, classes.textField)}
-          InputProps={{
-            startAdornment: <InputAdornment position="start">Kg</InputAdornment>,
-          }}
-        />
-        <FormControl className={clsx(classes.margin, classes.withoutLabel, classes.textField)}>
-          <Input
-            id="standard-adornment-weight"
-            value={values.weight}
-            onChange={handleChange('weight')}
-            endAdornment={<InputAdornment position="end">Kg</InputAdornment>}
-            aria-describedby="standard-weight-helper-text"
-            inputProps={{
-              'aria-label': 'weight',
-            }}
-          />
-          <FormHelperText id="standard-weight-helper-text">Weight</FormHelperText>
-        </FormControl>
-        <FormControl className={clsx(classes.margin, classes.textField)}>
-          <InputLabel htmlFor="standard-adornment-password">Password</InputLabel>
-          <Input
-            id="standard-adornment-password"
-            type={values.showPassword ? 'text' : 'password'}
-            value={values.password}
-            onChange={handleChange('password')}
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={handleClickShowPassword}
-                  onMouseDown={handleMouseDownPassword}
-                >
-                  {values.showPassword ? <Visibility /> : <VisibilityOff />}
-                </IconButton>
-              </InputAdornment>
-            }
-          />
-        </FormControl>
-        <FormControl fullWidth className={classes.margin}>
-          <InputLabel htmlFor="standard-adornment-amount">Amount</InputLabel>
-          <Input
-            id="standard-adornment-amount"
-            value={values.amount}
-            onChange={handleChange('amount')}
-            startAdornment={<InputAdornment position="start">$</InputAdornment>}
-          />
-        </FormControl>
+    <Container component="main" maxWidth="xs">
+      <CssBaseline />
+      <div className={classes.paper}>
+        <Typography component="h1" variant="h5">
+          New Transaction
+        </Typography>
+        <form className={classes.form} noValidate onSubmit = {onSubmit}>
+          <Grid container spacing={2}>
+          <Grid item xs={12}>
+              <TextField
+                value={payingAccount} 
+                onChange={(e) => setPayingAccount(e.target.value)}
+                name="payingAccount"
+                variant="outlined"
+                required
+                fullWidth
+                id="payingAccount"
+                label="Paying Account"
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                value={recivingAccount} 
+                onChange={(e) => setRecivingAccount(e.target.value)}
+                name="recivingAccount"
+                variant="outlined"
+                required
+                fullWidth
+                id="recivingAccount"
+                label="Reciving Account"
+                autoFocus
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                value={description} 
+                onChange={(e) => setDescription(e.target.value)}
+                name="description"
+                variant="outlined"
+                required
+                fullWidth
+                id="description"
+                label="Description"
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                value={amount} 
+                onChange={(e) => setAmount(e.target.value)}
+                variant="outlined"
+                required
+                fullWidth
+                id="amount"
+                label="Amount"
+                name="amount"
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                value={currency} 
+                onChange={(e) => setCurrency(e.target.value)}
+                variant="outlined"
+                required
+                fullWidth
+                id="currency"
+                label="Currency"
+                name="currency"
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                value={deadline} 
+                onChange={(e) => setDeadline(e.target.value)}
+                variant="outlined"
+                required
+                fullWidth
+                id="deadline"
+                name="deadline"
+                type="date"
+                label="Due date"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <FormControlLabel
+                control={<Checkbox value="allowExtraEmails" color="primary" />}
+                label="I want to mark it as urgent."
+              />
+            </Grid>
+          </Grid>
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+          >
+            New transaction
+          </Button>
+        </form>
       </div>
-      <div>
-        <TextField
-          label="With normal TextField"
-          id="filled-start-adornment"
-          className={clsx(classes.margin, classes.textField)}
-          InputProps={{
-            startAdornment: <InputAdornment position="start">Kg</InputAdornment>,
-          }}
-          variant="filled"
-        />
-        <FormControl className={clsx(classes.margin, classes.textField)} variant="filled">
-          <FilledInput
-            id="filled-adornment-weight"
-            value={values.weight}
-            onChange={handleChange('weight')}
-            endAdornment={<InputAdornment position="end">Kg</InputAdornment>}
-            aria-describedby="filled-weight-helper-text"
-            inputProps={{
-              'aria-label': 'weight',
-            }}
-          />
-          <FormHelperText id="filled-weight-helper-text">Weight</FormHelperText>
-        </FormControl>
-        <FormControl className={clsx(classes.margin, classes.textField)} variant="filled">
-          <InputLabel htmlFor="filled-adornment-password">Password</InputLabel>
-          <FilledInput
-            id="filled-adornment-password"
-            type={values.showPassword ? 'text' : 'password'}
-            value={values.password}
-            onChange={handleChange('password')}
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={handleClickShowPassword}
-                  onMouseDown={handleMouseDownPassword}
-                  edge="end"
-                >
-                  {values.showPassword ? <Visibility /> : <VisibilityOff />}
-                </IconButton>
-              </InputAdornment>
-            }
-          />
-        </FormControl>
-        <FormControl fullWidth className={classes.margin} variant="filled">
-          <InputLabel htmlFor="filled-adornment-amount">Amount</InputLabel>
-          <FilledInput
-            id="filled-adornment-amount"
-            value={values.amount}
-            onChange={handleChange('amount')}
-            startAdornment={<InputAdornment position="start">$</InputAdornment>}
-          />
-        </FormControl>
-      </div>
-      <div>
-        <TextField
-          label="With normal TextField"
-          id="outlined-start-adornment"
-          className={clsx(classes.margin, classes.textField)}
-          InputProps={{
-            startAdornment: <InputAdornment position="start">Kg</InputAdornment>,
-          }}
-          variant="outlined"
-        />
-        <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
-          <OutlinedInput
-            id="outlined-adornment-weight"
-            value={values.weight}
-            onChange={handleChange('weight')}
-            endAdornment={<InputAdornment position="end">Kg</InputAdornment>}
-            aria-describedby="outlined-weight-helper-text"
-            inputProps={{
-              'aria-label': 'weight',
-            }}
-            labelWidth={0}
-          />
-          <FormHelperText id="outlined-weight-helper-text">Weight</FormHelperText>
-        </FormControl>
-        <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
-          <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
-          <OutlinedInput
-            id="outlined-adornment-password"
-            type={values.showPassword ? 'text' : 'password'}
-            value={values.password}
-            onChange={handleChange('password')}
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={handleClickShowPassword}
-                  onMouseDown={handleMouseDownPassword}
-                  edge="end"
-                >
-                  {values.showPassword ? <Visibility /> : <VisibilityOff />}
-                </IconButton>
-              </InputAdornment>
-            }
-            labelWidth={70}
-          />
-        </FormControl>
-        <FormControl fullWidth className={classes.margin} variant="outlined">
-          <InputLabel htmlFor="outlined-adornment-amount">Amount</InputLabel>
-          <OutlinedInput
-            id="outlined-adornment-amount"
-            value={values.amount}
-            onChange={handleChange('amount')}
-            startAdornment={<InputAdornment position="start">$</InputAdornment>}
-            labelWidth={60}
-          />
-        </FormControl>
-      </div>
-    </div>
+    </Container>
   );
 }

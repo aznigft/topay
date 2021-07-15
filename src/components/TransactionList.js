@@ -32,7 +32,7 @@ export const TransactionList = () => {
                 variant="contained" 
                 color="primary"
                 component={Link}
-                to="/addTransaction" 
+                to="/editTransaction" 
                 disableElevation>Create new transaction</Button>
         </>
     )
