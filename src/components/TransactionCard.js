@@ -44,7 +44,7 @@ export default function TransactionCard({transaction}) {
                   {transaction.description}
                 </Typography>
                 <Typography variant="body2" color="textSecondary">
-                  {transaction.deadLine}
+                    Due date: {transaction.deadLine}
                 </Typography>
               </Grid>
 
@@ -52,8 +52,8 @@ export default function TransactionCard({transaction}) {
             <Grid item>
               <Typography variant="subtitle1">{transaction.amount} {transaction.currency}</Typography>
             </Grid>
-            <Grid item xs="12">
-                     <ButtonGroup variant="text"  size="small" fullWidth = "true"  aria-label="text primary button group">
+            <Grid item xs={12}>
+                     <ButtonGroup variant="text"  size="small" fullWidth = {true}  aria-label="text primary button group">
                         <Button>Edit</Button>
                         <Button color="primary">Pay</Button>
                         <Button color="secondary">Delete</Button>

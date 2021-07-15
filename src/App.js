@@ -6,6 +6,7 @@ import {TransactionList} from './components/TransactionList'
 import {AddTransaction} from './components/AddTransaction'
 import {GlobalProvider} from './context/GlobalState'
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom'
+import EditTransaction from './components/EditTransaction'
 
 
 function App() {
@@ -26,6 +27,9 @@ function App() {
           </Route>
           <Route path="/addTransaction">
             <AddTransaction />
+          </Route>
+          <Route path="/editTransaction">
+            <EditTransaction />
           </Route>
         </Switch>
       </div>

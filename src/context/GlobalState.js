@@ -8,7 +8,7 @@ const initialState = {
             payingAccount: 'User',
             recivingAccount: 'Allegro sp. z o.o.',
             deadLine: '30.09.2021',
-            description: 'Home appliances , transaction id - ASDASDASDCZXCASDAD',
+            description: 'Transaction id - ASDCZXCASDAD',
             amount: 50,
             currency: 'PLN'
         },
@@ -29,6 +29,24 @@ const initialState = {
             description: 'Bill split from last pub visit',
             amount: 13,
             currency: 'EUR'
+        },
+        {
+            id: 3,
+            payingAccount: 'User',
+            recivingAccount: 'Spotify',
+            deadLine: '20.07.2021',
+            description: 'Aplication subscription',
+            amount: 9,
+            currency: 'EUR'
+        },
+        {
+            id: 4,
+            payingAccount: 'User',
+            recivingAccount: 'Link 4',
+            deadLine: '20.07.2021',
+            description: 'Car insurance yearly fee',
+            amount: 700,
+            currency: 'PLN'
         },
         ]
 }
