@@ -6,6 +6,7 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import { Button } from '@material-ui/core';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -43,7 +44,7 @@ export default function TransactionCard({transaction}) {
                   {transaction.description}
                 </Typography>
                 <Typography variant="body2" color="textSecondary">
-                    Due date: {transaction.deadLine.toLocaleDateString()}
+                    Due date: {new Date(transaction.deadLine).toLocaleDateString()}
                 </Typography>
               </Grid>
 
@@ -53,7 +54,7 @@ export default function TransactionCard({transaction}) {
             </Grid>
             <Grid item xs={12}>
                      <ButtonGroup variant="text"  size="small" fullWidth = {true}  aria-label="text primary button group">
-                        <Button>Edit</Button>
+                        <Button component={Link} to={'/editTransaction/' + transaction.id}>Edit</Button>
                         <Button color="primary">Pay</Button>
                         <Button color="secondary" onClick={() => deleteTransaction(transaction.id)}>Delete</Button>
                     </ButtonGroup>

@@ -1,6 +1,5 @@
 import React, {useContext} from 'react'
 import { GlobalContext } from '../context/GlobalState'
-import {Transaction} from './Transaction'
 import {Link} from 'react-router-dom'
 import TransactionCard from './TransactionCard'
 import { Button } from '@material-ui/core'
@@ -32,7 +31,7 @@ export const TransactionList = () => {
                 variant="contained" 
                 color="primary"
                 component={Link}
-                to="/editTransaction" 
+                to="/editTransaction/new" 
                 disableElevation>Create new transaction</Button>
         </>
     )

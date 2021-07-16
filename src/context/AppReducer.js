@@ -1,6 +1,6 @@
 export default function appReducer (state, action) {
-    switch(action.type) {
 
+    switch(action.type) {
         case 'DELETE_TRANSACTION':
             return {
                 ...state,
@@ -10,7 +10,12 @@ export default function appReducer (state, action) {
             return {
                 ...state,
                 transactions: [action.payload, ...state.transactions]
-            }    
+            } 
+        case 'EDIT_TRANSACTION':
+            return {
+                ...state,
+                transactions: state.transactions.map(transaction => +transaction.id === +action.payload.id ? action.payload : transaction)
+            }       
         default:
             return state;
     }

@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react'
+import React, {useState, useContext, useEffect} from 'react'
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
@@ -9,7 +9,21 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { GlobalContext } from '../context/GlobalState';
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
+
+function formatDate(date) {
+  var d = new Date(date),
+      month = '' + (d.getMonth() + 1),
+      day = '' + d.getDate(),
+      year = d.getFullYear();
+
+  if (month.length < 2) 
+      month = '0' + month;
+  if (day.length < 2) 
+      day = '0' + day;
+
+  return [year, month, day].join('-');
+}
 
 
 const useStyles = makeStyles((theme) => ({
@@ -35,14 +49,32 @@ const useStyles = makeStyles((theme) => ({
 export default function EditTransaction() {
   const classes = useStyles();
 
+  const {transactionId} = useParams();
+
+  useEffect(() => {
+
+    if(transactionId !== "new") {
+      const transaction = transactions.filter(trans => +trans.id === +transactionId)[0];
+
+      console.log(transaction);
+
+      setPayingAccount(transaction.payingAccount);
+      setRecivingAccount(transaction.recivingAccount);
+      setDescription(transaction.description);
+      setDeadline(formatDate(transaction.deadLine));
+      setAmount(transaction.amount);
+      setCurrency(transaction.currency);
+    }
+  }, [transactionId])
+
   const [payingAccount, setPayingAccount] = useState('Myself');
   const [recivingAccount, setRecivingAccount] = useState('');
   const [description, setDescription] = useState('');
-  const [deadline, setDeadline] = useState(new Date());
+  const [deadline, setDeadline] = useState(formatDate(new Date()));
   const [amount, setAmount] = useState(0);
   const [currency, setCurrency] = useState('');
 
-  const {addTransaction, transactions} = useContext(GlobalContext);
+  const {addTransaction,editTransaction, transactions} = useContext(GlobalContext);
 
   let history = useHistory();
 
@@ -54,16 +86,23 @@ export default function EditTransaction() {
     e.preventDefault();
 
     const newTransaction = {
-        id: generateID(), 
-        payingAccount: payingAccount,
-        recivingAccount: recivingAccount,
-        description: description,
-        deadLine: deadline,
-        amount: +amount,
-        currency: currency
+      id: '',
+      payingAccount: payingAccount,
+      recivingAccount: recivingAccount,
+      description: description,
+      deadLine: deadline,
+      amount: +amount,
+      currency: currency
+  }
+
+    if( transactionId !== "new") {
+      newTransaction.id = transactionId;
+      editTransaction(newTransaction);
+    } else {
+      newTransaction.id = generateID();
+      addTransaction(newTransaction);
     }
 
-    addTransaction(newTransaction)
     history.push('/transactionList');
   }
 
@@ -79,7 +118,7 @@ export default function EditTransaction() {
           <Grid container spacing={2}>
           <Grid item xs={12}>
               <TextField
-                value={payingAccount} 
+                value={payingAccount || ''} 
                 onChange={(e) => setPayingAccount(e.target.value)}
                 name="payingAccount"
                 variant="outlined"
@@ -91,7 +130,7 @@ export default function EditTransaction() {
             </Grid>
             <Grid item xs={12}>
               <TextField
-                value={recivingAccount} 
+                value={recivingAccount || ''} 
                 onChange={(e) => setRecivingAccount(e.target.value)}
                 name="recivingAccount"
                 variant="outlined"
@@ -104,7 +143,7 @@ export default function EditTransaction() {
             </Grid>
             <Grid item xs={12}>
               <TextField
-                value={description} 
+                value={description || ''} 
                 onChange={(e) => setDescription(e.target.value)}
                 name="description"
                 variant="outlined"
@@ -116,7 +155,7 @@ export default function EditTransaction() {
             </Grid>
             <Grid item xs={12}>
               <TextField
-                value={amount} 
+                value={amount || 0} 
                 onChange={(e) => setAmount(e.target.value)}
                 variant="outlined"
                 required
@@ -128,7 +167,7 @@ export default function EditTransaction() {
             </Grid>
             <Grid item xs={12}>
               <TextField
-                value={currency} 
+                value={currency || ''} 
                 onChange={(e) => setCurrency(e.target.value)}
                 variant="outlined"
                 required
@@ -140,7 +179,7 @@ export default function EditTransaction() {
             </Grid>
             <Grid item xs={12}>
               <TextField
-                value={deadline} 
+                value={deadline } 
                 onChange={(e) => setDeadline(e.target.value)}
                 variant="outlined"
                 required
