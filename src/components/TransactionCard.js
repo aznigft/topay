@@ -1,12 +1,10 @@
-import React from 'react';
+import React, {useContext} from 'react'
+import { GlobalContext } from '../context/GlobalState';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-import ButtonBase from '@material-ui/core/ButtonBase';
 import { Button } from '@material-ui/core';
-import DeleteIcon from '@material-ui/icons/Delete';
-import IconButton from '@material-ui/core/IconButton';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 
 const useStyles = makeStyles((theme) => ({
@@ -29,6 +27,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function TransactionCard({transaction}) {
   const classes = useStyles();
+  const {deleteTransaction} = useContext(GlobalContext);
 
   return (
     <div className={classes.root}>
@@ -56,7 +55,7 @@ export default function TransactionCard({transaction}) {
                      <ButtonGroup variant="text"  size="small" fullWidth = {true}  aria-label="text primary button group">
                         <Button>Edit</Button>
                         <Button color="primary">Pay</Button>
-                        <Button color="secondary">Delete</Button>
+                        <Button color="secondary" onClick={() => deleteTransaction(transaction.id)}>Delete</Button>
                     </ButtonGroup>
               </Grid>
           </Grid>
