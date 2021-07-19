@@ -42,14 +42,19 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(3),
   },
   submit: {
-    margin: theme.spacing(3, 0, 2),
+    margin: theme.spacing(3, 0, 0),
+  },
+  cancel: {
+    margin: theme.spacing(0, 0, 0),
   },
 }));
 
-export default function EditTransaction() {
+export default function EditTransaction({setNavState}) {
   const classes = useStyles();
 
   const {transactionId} = useParams();
+
+  setNavState(2)
 
   useEffect(() => {
 
@@ -116,7 +121,7 @@ export default function EditTransaction() {
         </Typography>
         <form className={classes.form} noValidate onSubmit = {onSubmit}>
           <Grid container spacing={2}>
-          <Grid item xs={12}>
+            <Grid item xs={12}>
               <TextField
                 value={payingAccount || ''} 
                 onChange={(e) => setPayingAccount(e.target.value)}
@@ -208,7 +213,19 @@ export default function EditTransaction() {
             color="primary"
             className={classes.submit}
           >
-            New transaction
+            Save
+          </Button>
+            <Typography xs ={12} align="center">
+              Or
+            </Typography>
+          <Button
+            fullWidth
+            variant="contained"
+            color="secondary"
+            className={classes.cancel}
+            onClick= {() => history.push('/transactionList')}
+          >
+            Cancel
           </Button>
         </form>
       </div>

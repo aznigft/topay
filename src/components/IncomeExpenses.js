@@ -1,7 +1,9 @@
 import React, {useContext} from 'react'
 import { GlobalContext } from '../context/GlobalState'
 
-export const IncomeExpenses = () => {
+export const IncomeExpenses = ({setNavState}) => {
+
+    setNavState(0)
 
     const {transactions} = useContext(GlobalContext);
 
@@ -13,13 +15,13 @@ export const IncomeExpenses = () => {
     return (
         <div className="inc-exp-container">
             <div>
-                <h4>Income</h4>
-                <p className="money plus">{income}</p>
+                <h4>Summary</h4>
+                <p className="money minus">{income}</p>
             </div>
-            <div>
+            {/* <div>
                 <h4>Expense</h4>
                 <p className="money minus">{expenses}</p>
-            </div>
+            </div> */}
         </div>
     )
 }
