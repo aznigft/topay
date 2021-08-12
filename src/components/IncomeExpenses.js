@@ -15,7 +15,7 @@ export const IncomeExpenses = ({setNavState}) => {
     return (
         <div className="inc-exp-container">
             <div>
-                <h4>Summary</h4>
+                <h4>Total amount in transactions</h4>
                 <p className="money minus">{income}</p>
             </div>
             {/* <div>
