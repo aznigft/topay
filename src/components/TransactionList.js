@@ -1,4 +1,4 @@
-import React, {useContext} from 'react'
+import React, {useContext, useEffect} from 'react'
 import { GlobalContext } from '../context/GlobalState'
 import {Link} from 'react-router-dom'
 import TransactionCard from './TransactionCard'
@@ -15,8 +15,13 @@ const useStyles = makeStyles((theme) => ({
   }));
 
 export const TransactionList = ({setNavState}) => {
-    const {transactions} = useContext(GlobalContext);
+    const {transactions, getTransactions} = useContext(GlobalContext);
     const classes = useStyles();
+    
+    useEffect(() => {
+        getTransactions();
+        // eslint-disable-netx-line react-hooks/exhaustive-deps
+    }, []);
     
     setNavState(1)
 

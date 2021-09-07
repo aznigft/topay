@@ -1,54 +1,11 @@
 import React, {createContext, useReducer} from 'react';
 import AppReducer from './AppReducer'
+import axios from 'axios'
 
 const initialState = {
-    transactions: [
-        {
-            id: 0,
-            payingAccount: 'User',
-            recivingAccount: 'Allegro sp. z o.o.',
-            deadLine: new Date('2021-09-03T00:00:01'),
-            description: 'Transaction id - ASDCZXCASDAD',
-            amount: 50,
-            currency: 'PLN'
-        },
-        {
-            id: 1,
-            payingAccount: 'User',
-            recivingAccount: 'Inea ',
-            deadLine: new Date('2021-08-13T00:00:01'),
-            description: 'Monthly bill for internet',
-            amount: 30,
-            currency: 'PLN'
-        },
-        {
-            id: 2,
-            payingAccount: 'User',
-            recivingAccount: 'Stefan Burczymucha',
-            deadLine: new Date('2021-11-08T00:00:01'),
-            description: 'Bill split from last pub visit',
-            amount: 13,
-            currency: 'EUR'
-        },
-        {
-            id: 3,
-            payingAccount: 'User',
-            recivingAccount: 'Spotify',
-            deadLine: new Date('2021-08-15T00:00:01'),
-            description: 'Aplication subscription',
-            amount: 9,
-            currency: 'EUR'
-        },
-        {
-            id: 4,
-            payingAccount: 'User',
-            recivingAccount: 'Link 4',
-            deadLine: new Date('2021-07-30T00:00:01'),
-            description: 'Car insurance yearly fee',
-            amount: 700,
-            currency: 'PLN'
-        },
-        ]
+    transactions: [],
+    error: null,
+    loading: true
 }
 
 export const GlobalContext = createContext(initialState);
@@ -56,14 +13,58 @@ export const GlobalContext = createContext(initialState);
 export const GlobalProvider = ({children}) => {
     const [state, dispatch] = useReducer(AppReducer, initialState)
 
-    function deleteTransaction(id) {
-        dispatch({
-            type: 'DELETE_TRANSACTION',
-            payload: id
-        });
+    async function getTransactions() {
+        try{
+            const res = await axios.get('http://localhost:8081/transactions')
+        
+            dispatch({
+                type: 'GET_TRANSACTIONS',
+                payload: res.data
+            })
+        } catch (err) {
+            console.log(err)
+            dispatch({
+                type: 'TRANSACTION_ERROR',
+                payload: err.response.error
+            })
+        }
     }
 
-    function addTransaction(transaction) {
+    async function deleteTransaction(id) {
+
+        const res = await axios.delete('http://localhost:8081/transactions/' + id)
+
+        try {
+            dispatch({
+                type: 'DELETE_TRANSACTION',
+                payload: id
+            });
+        } catch(err) {
+            console.log(err)
+            dispatch({
+                type: 'TRANSACTION_ERROR',
+                payload: err.response.error
+            })
+        }
+    }
+
+    async function addTransaction(transaction) {
+
+        const res = await axios.post('http://localhost:8081/transactions', transaction)
+
+        try{
+            dispatch({
+                type: 'ADD_TRANSACTION',
+                payload: res.data
+            })
+        } catch (err) {
+            console.log(err)
+            dispatch({
+                type: 'TRANSACTION_ERROR',
+                payload: err.response.error
+            })
+        }
+
         dispatch({
             type: 'ADD_TRANSACTION',
             payload: transaction
@@ -79,6 +80,9 @@ export const GlobalProvider = ({children}) => {
 
     return (<GlobalContext.Provider value={{
         transactions: state.transactions,
+        error: state.error,
+        loading: state.loading,
+        getTransactions,
         deleteTransaction,
         addTransaction,
         editTransaction
