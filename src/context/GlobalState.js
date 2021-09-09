@@ -35,10 +35,15 @@ export const GlobalProvider = ({children}) => {
         const res = await axios.delete('http://localhost:8081/transactions/' + id)
 
         try {
-            dispatch({
-                type: 'DELETE_TRANSACTION',
-                payload: id
-            });
+
+            if(res.data === true) {
+                getTransactions();
+            }
+            
+            // dispatch({
+            //     type: 'DELETE_TRANSACTION',
+            //     payload: id
+            // });
         } catch(err) {
             console.log(err)
             dispatch({
@@ -53,10 +58,14 @@ export const GlobalProvider = ({children}) => {
         const res = await axios.post('http://localhost:8081/transactions', transaction)
 
         try{
-            dispatch({
-                type: 'ADD_TRANSACTION',
-                payload: res.data
-            })
+
+            if(!!res.data ) {
+                getTransactions();
+            }
+            // dispatch({
+            //     type: 'ADD_TRANSACTION',
+            //     payload: res.data
+            // })
         } catch (err) {
             console.log(err)
             dispatch({
@@ -72,10 +81,13 @@ export const GlobalProvider = ({children}) => {
     }
 
     function editTransaction(transaction) {
-        dispatch({
-            type: 'EDIT_TRANSACTION',
-            payload: transaction
-        })
+
+        addTransaction(transaction);
+
+        // dispatch({
+        //     type: 'EDIT_TRANSACTION',
+        //     payload: transaction
+        // })
     }
 
     return (<GlobalContext.Provider value={{

@@ -44,7 +44,7 @@ export default function TransactionCard({transaction}) {
                   {transaction.description}
                 </Typography>
                 <Typography variant="body2" color="textSecondary">
-                    Due date: {new Date(transaction.deadLine).toLocaleDateString()}
+                    Due date: {new Date(transaction.dueDate).toLocaleDateString()}
                 </Typography>
               </Grid>
 
