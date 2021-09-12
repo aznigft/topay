@@ -1,6 +1,7 @@
 import React, {createContext, useReducer} from 'react';
 import AppReducer from './AppReducer'
 import axios from 'axios'
+import authHeader from '../services/auth-header';
 
 const initialState = {
     transactions: [],
@@ -15,7 +16,7 @@ export const GlobalProvider = ({children}) => {
 
     async function getTransactions() {
         try{
-            const res = await axios.get('http://localhost:8081/transactions')
+            const res = await axios.get('http://localhost:8081/transactions', { headers: authHeader() })
         
             dispatch({
                 type: 'GET_TRANSACTIONS',
@@ -32,7 +33,7 @@ export const GlobalProvider = ({children}) => {
 
     async function deleteTransaction(id) {
 
-        const res = await axios.delete('http://localhost:8081/transactions/' + id)
+        const res = await axios.delete('http://localhost:8081/transactions/' + id, { headers: authHeader() })
 
         try {
 
@@ -55,7 +56,7 @@ export const GlobalProvider = ({children}) => {
 
     async function addTransaction(transaction) {
 
-        const res = await axios.post('http://localhost:8081/transactions', transaction)
+        const res = await axios.post('http://localhost:8081/transactions', transaction,{ headers: authHeader() })
 
         try{
 

@@ -66,7 +66,7 @@ export default function EditTransaction({setNavState}) {
       setPayingAccount(transaction.payingAccount);
       setRecivingAccount(transaction.recivingAccount);
       setDescription(transaction.description);
-      setDeadline(formatDate(transaction.deadLine));
+      setDueDate(formatDate(transaction.dueDate));
       setAmount(transaction.amount);
       setCurrency(transaction.currency);
     }
@@ -75,7 +75,7 @@ export default function EditTransaction({setNavState}) {
   const [payingAccount, setPayingAccount] = useState('Myself');
   const [recivingAccount, setRecivingAccount] = useState('');
   const [description, setDescription] = useState('');
-  const [deadline, setDeadline] = useState(formatDate(new Date()));
+  const [dueDate, setDueDate] = useState(formatDate(new Date()));
   const [amount, setAmount] = useState(0);
   const [currency, setCurrency] = useState('');
 
@@ -95,7 +95,7 @@ export default function EditTransaction({setNavState}) {
       payingAccount: payingAccount,
       recivingAccount: recivingAccount,
       description: description,
-      deadLine: deadline,
+      dueDate: dueDate,
       amount: +amount,
       currency: currency
   }
@@ -184,13 +184,13 @@ export default function EditTransaction({setNavState}) {
             </Grid>
             <Grid item xs={12}>
               <TextField
-                value={deadline } 
-                onChange={(e) => setDeadline(e.target.value)}
+                value={dueDate} 
+                onChange={(e) => setDueDate(e.target.value)}
                 variant="outlined"
                 required
                 fullWidth
-                id="deadline"
-                name="deadline"
+                id="dueDate"
+                name="dueDate"
                 type="date"
                 label="Due date"
                 InputLabelProps={{
