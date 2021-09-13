@@ -12,6 +12,8 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import AuthService from '../../services/AuthService';
+import { useHistory } from "react-router-dom";
 
 function Copyright() {
   return (
@@ -50,6 +52,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignIn() {
   const classes = useStyles();
+  let history = useHistory();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -57,13 +60,14 @@ export default function SignIn() {
   const onSubmit = e => {
     e.preventDefault();
 
-    const signInRequest = {
-        email: email,
-        paasword: password
-    }
+    const loginResp = AuthService.login(email, password);
 
-    console.log(signInRequest);
-}
+    loginResp.then(res => {
+      history.push('/');
+    }).catch(err => {
+      alert('Login failed. Message ' + err);
+    })
+  }
 
   return (
     <Container component="main" maxWidth="xs">
