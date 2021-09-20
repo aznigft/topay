@@ -4,8 +4,7 @@ const API_URL = "http://localhost:8081/";
 
 class AuthService {
   async login(username, password) {
-
-    const response = await axios.post(API_URL + "authenticate", {username, password})
+    const response = await axios.post(API_URL + "authenticate", {username, password});
 
     try {
         if (response.data.accessToken) {
@@ -13,7 +12,7 @@ class AuthService {
         }
         return 'Success!'
     } catch(err) {
-        return 'err';
+        return err;
     }
   }
 
@@ -21,12 +20,17 @@ class AuthService {
     localStorage.removeItem("user");
   }
 
-  register(username, email, password) {
-    return axios.post(API_URL + "signup", {
-      username,
-      email,
-      password
-    });
+  async register( username, password) {
+    const response = await axios.post(API_URL + "signUp", {username, password})
+
+    try {
+      if(response.data.id) {
+        
+      }
+      return 'Success!'
+    } catch(err) {
+      return err;
+    }
   }
 
   getCurrentUser() {

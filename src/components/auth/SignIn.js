@@ -63,7 +63,7 @@ export default function SignIn() {
     const loginResp = AuthService.login(email, password);
 
     loginResp.then(res => {
-      history.push('/');
+      history.push('/transactionList');
     }).catch(err => {
       alert('Login failed. Message ' + err);
     })

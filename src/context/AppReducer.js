@@ -25,7 +25,8 @@ export default function appReducer (state, action) {
         case 'TRANSACTION_ERROR':
             return {
                 ...state,
-                error: action.payload
+                error: action.payload,
+                transactions: []
             }      
         default:
             return state;
