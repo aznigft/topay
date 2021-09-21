@@ -1,10 +1,10 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import BottomNavigation from '@material-ui/core/BottomNavigation';
-import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
-import Home from '@material-ui/icons/Home';
-import List from '@material-ui/icons/List';
-import AddCircle from '@material-ui/icons/AddCircle';
+import makeStyles from '@mui/styles/makeStyles';
+import BottomNavigation from '@mui/material/BottomNavigation';
+import BottomNavigationAction from '@mui/material/BottomNavigationAction';
+import Home from '@mui/icons-material/Home';
+import List from '@mui/icons-material/List';
+import AddCircle from '@mui/icons-material/AddCircle';
 import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles({

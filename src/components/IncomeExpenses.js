@@ -1,9 +1,9 @@
-import React, {useContext} from 'react'
+import React, {useContext, useEffect} from 'react'
 import { GlobalContext } from '../context/GlobalState'
-import Button from '@material-ui/core/Button';
+import Button from '@mui/material/Button';
 import { useHistory } from "react-router-dom";
 import AuthService from '../services/AuthService';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 
 const useStyles = makeStyles((theme) => ({
     layout: {
@@ -18,7 +18,9 @@ const useStyles = makeStyles((theme) => ({
 
 export const IncomeExpenses = ({setNavState}) => {
 
-    setNavState(0)
+    useEffect(() => {
+        setNavState(0);
+      }, []);
 
     const {transactions} = useContext(GlobalContext);
 

@@ -1,7 +1,7 @@
 import React, {useContext, useEffect} from 'react'
 import { GlobalContext } from '../context/GlobalState'
 import TransactionCard from './TransactionCard'
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 
 
 const useStyles = makeStyles((theme) => ({

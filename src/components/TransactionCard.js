@@ -1,11 +1,11 @@
 import React, {useContext} from 'react'
 import { GlobalContext } from '../context/GlobalState';
-import { makeStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
-import { Button } from '@material-ui/core';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
+import makeStyles from '@mui/styles/makeStyles';
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
+import { Button } from '@mui/material';
+import ButtonGroup from '@mui/material/ButtonGroup';
 import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({

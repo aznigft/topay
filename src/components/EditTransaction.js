@@ -1,15 +1,15 @@
 import React, {useState, useContext, useEffect} from 'react'
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
+import Button from '@mui/material/Button';
+import CssBaseline from '@mui/material/CssBaseline';
+import TextField from '@mui/material/TextField';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
 import { GlobalContext } from '../context/GlobalState';
 import { useHistory, useParams } from "react-router-dom";
+import { makeStyles } from '@material-ui/core/styles' 
 
 function formatDate(date) {
   var d = new Date(date),
@@ -54,11 +54,10 @@ export default function EditTransaction({setNavState}) {
 
   const {transactionId} = useParams();
 
-  setNavState(2)
-
   useEffect(() => {
-
+    setNavState(2)
     if(transactionId !== "new") {
+      
       const transaction = transactions.filter(trans => +trans.id === +transactionId)[0];
 
       console.log(transaction);

@@ -8,6 +8,7 @@ import EditTransaction from './components/EditTransaction'
 import SignIn from './components/auth/SignIn'
 import SignUp from './components/auth/SignUp'
 import ProtectedRoute from './services/ProtectedRoute'
+import Contacts from './components/Contacts'
 
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
             </Route>
             <ProtectedRoute path="/transactionList" component={TransactionList} setNavState = {setNavState} navState={navState} />
             <ProtectedRoute path="/editTransaction/:transactionId" component={EditTransaction} setNavState = {setNavState} navState={navState} />
+            <ProtectedRoute path="/contacts" component={Contacts} setNavState = {setNavState} navState={navState} />
           </Switch>
       </GlobalProvider>
     </Router>
