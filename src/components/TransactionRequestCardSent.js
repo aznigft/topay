@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-export default function TransactionCard({ transaction }) {
+export default function TransactionRequestCardSent({ request }) {
 	const classes = useStyles();
 	const { deleteTransaction } = useContext(GlobalContext);
 
@@ -45,18 +45,20 @@ export default function TransactionCard({ transaction }) {
 					<Grid item xs={12} sm container>
 						<Grid item xs container direction="column" spacing={2}>
 							<Grid item xs>
-								<Typography
-									variant="h7"
-									mb={1}
-									paragraph="true"
-									fontWeight="600"
-								>
-									{transaction.receivingProfile.firstName}{" "}
-									{transaction.receivingProfile.lastName}
-								</Typography>
-								<Typography variant="body2">
-									{transaction.description}
-								</Typography>
+								{request.userApprovingPayment ? (
+									<Typography
+										variant="h7"
+										mb={1}
+										paragraph="true"
+										fontWeight="600"
+									>
+										{request.userApprovingPayment.firstName}{" "}
+										{request.userApprovingPayment.lastName}
+									</Typography>
+								) : (
+									""
+								)}
+								<Typography variant="body2">{request.description}</Typography>
 							</Grid>
 						</Grid>
 						<Grid item mb={1}>
@@ -67,13 +69,10 @@ export default function TransactionCard({ transaction }) {
 								mb={1}
 								fontWeight="600"
 							>
-								{transaction.amount} {transaction.currency}
+								{request.amount} {request.currency}
 							</Typography>
 							<Typography variant="body2" color="textSecondary">
-								Due date:{" "}
-								{new Date(
-									transaction.dueDate
-								).toLocaleDateString()}
+								Due date: {new Date(request.dueDate).toLocaleDateString()}
 							</Typography>
 						</Grid>
 						<Grid item xs={12}>
@@ -84,20 +83,14 @@ export default function TransactionCard({ transaction }) {
 								aria-label="text primary button group"
 							>
 								<Button
-									onClick={() =>
-										history.push(
-											"/editTransaction/" + transaction.id
-										)
-									}
+									onClick={() => history.push("/editTransaction/" + request.id)}
 								>
 									Edit
 								</Button>
-								<Button color="primary">Pay</Button>
+								<Button color="primary">Withdraw</Button>
 								<Button
 									color="secondary"
-									onClick={() =>
-										deleteTransaction(transaction.id)
-									}
+									onClick={() => deleteTransaction(request.id)}
 								>
 									Delete
 								</Button>

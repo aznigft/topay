@@ -32,11 +32,17 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-export default function TransactionCard({ transaction }) {
+export default function TransactionRequestCardReceived({ request, confirmed }) {
 	const classes = useStyles();
-	const { deleteTransaction } = useContext(GlobalContext);
+	const { deleteTransaction, confirmTransactionRequest } =
+		useContext(GlobalContext);
 
 	let history = useHistory();
+
+	const handleConfirmRequest = (event, requestId) => {
+		confirmTransactionRequest(requestId);
+		history.push("/payments");
+	};
 
 	return (
 		<div className={classes.root}>
@@ -45,18 +51,20 @@ export default function TransactionCard({ transaction }) {
 					<Grid item xs={12} sm container>
 						<Grid item xs container direction="column" spacing={2}>
 							<Grid item xs>
-								<Typography
-									variant="h7"
-									mb={1}
-									paragraph="true"
-									fontWeight="600"
-								>
-									{transaction.receivingProfile.firstName}{" "}
-									{transaction.receivingProfile.lastName}
-								</Typography>
-								<Typography variant="body2">
-									{transaction.description}
-								</Typography>
+								{request.userRequestingPayment ? (
+									<Typography
+										variant="h7"
+										mb={1}
+										paragraph="true"
+										fontWeight="600"
+									>
+										{request.userRequestingPayment.firstName}{" "}
+										{request.userRequestingPayment.lastName}
+									</Typography>
+								) : (
+									""
+								)}
+								<Typography variant="body2">{request.description}</Typography>
 							</Grid>
 						</Grid>
 						<Grid item mb={1}>
@@ -67,42 +75,35 @@ export default function TransactionCard({ transaction }) {
 								mb={1}
 								fontWeight="600"
 							>
-								{transaction.amount} {transaction.currency}
+								{request.amount} {request.currency}
 							</Typography>
 							<Typography variant="body2" color="textSecondary">
-								Due date:{" "}
-								{new Date(
-									transaction.dueDate
-								).toLocaleDateString()}
+								Due date: {new Date(request.dueDate).toLocaleDateString()}
 							</Typography>
 						</Grid>
-						<Grid item xs={12}>
-							<ButtonGroup
-								variant="text"
-								size="small"
-								fullWidth={true}
-								aria-label="text primary button group"
-							>
-								<Button
-									onClick={() =>
-										history.push(
-											"/editTransaction/" + transaction.id
-										)
-									}
+						{confirmed ? (
+							""
+						) : (
+							<Grid item xs={12}>
+								<ButtonGroup
+									variant="text"
+									size="small"
+									fullWidth={true}
+									aria-label="text primary button group"
 								>
-									Edit
-								</Button>
-								<Button color="primary">Pay</Button>
-								<Button
-									color="secondary"
-									onClick={() =>
-										deleteTransaction(transaction.id)
-									}
-								>
-									Delete
-								</Button>
-							</ButtonGroup>
-						</Grid>
+									<Button onClick={(e) => handleConfirmRequest(e, request.id)}>
+										Confirm
+									</Button>
+									<Button color="primary">Reject</Button>
+									<Button
+										color="secondary"
+										onClick={() => deleteTransaction(request.id)}
+									>
+										Delete
+									</Button>
+								</ButtonGroup>
+							</Grid>
+						)}
 					</Grid>
 				</Grid>
 			</Paper>

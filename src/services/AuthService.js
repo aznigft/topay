@@ -20,8 +20,8 @@ class AuthService {
     localStorage.removeItem("user");
   }
 
-  async register( username, password) {
-    const response = await axios.post(API_URL + "signUp", {username, password})
+  async register( username, password, firstName, lastName) {
+    const response = await axios.post(API_URL + "signUp", {username, password, firstName, lastName})
 
     try {
       if(response.data.id) {

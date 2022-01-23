@@ -47,24 +47,28 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-export default function EditTransaction() {
+export default function EditTransactionRequest() {
 	const classes = useStyles();
-	const { transactionId, transactionType } = useParams();
+	const { transactionRequestId, transactionType } = useParams();
 
-	const [payingAccount, setPayingAccount] = useState("");
-	const [receivingProfile, setReceivingProfile] = useState("");
-	const [receivingAccount, setReceivingAccount] = useState("");
-	const [quickReceiver, setQuickReceiver] = useState("");
+	const [userRequestingPayment, setUserRequestingPayment] = useState("");
+	const [accountPaymentTo, setAccountPaymentTo] = useState("");
+	const [userApprovingPayment, setUserApprovingPayment] = useState("");
+
 	const [description, setDescription] = useState("");
 	const [dueDate, setDueDate] = useState(formatDate(new Date()));
 	const [amount, setAmount] = useState(0);
 	const [currency, setCurrency] = useState("");
 	const [myProfile, setMyProfile] = useState("");
 	const [contacts, setMyContacts] = useState([]);
-	const [transaction, setTransaction] = useState("");
+	const [transactionRequest, setTransactionRequest] = useState("");
 
-	const { saveTransaction, getContacts, getMyProfile, getTransaction } =
-		useContext(GlobalContext);
+	const {
+		saveTransactionRequest,
+		getTransactionRequest,
+		getContacts,
+		getMyProfile,
+	} = useContext(GlobalContext);
 
 	let history = useHistory();
 
@@ -78,72 +82,60 @@ export default function EditTransaction() {
 			const contactsTemp = await getContacts();
 			setMyContacts(contactsTemp);
 
-			if (transactionId !== "new") {
-				const transactionTemp = await getTransaction(transactionId);
-				setTransaction(transactionTemp);
+			if (transactionRequestId !== "new") {
+				console.log("Request not new");
+				console.log(transactionRequestId);
+
+				const transactionRequestTemp = await getTransactionRequest(
+					transactionRequestId
+				);
+				setTransactionRequest(transactionRequestTemp);
 			}
 		})();
 
 		return () => (disposed = true);
-	}, [transactionId]);
+	}, [transactionRequestId]);
 
 	useEffect(() => {
-		if (myProfile !== "" && contacts !== "" && transaction !== "") {
-			console.log("dane useEffect");
-			console.log(myProfile);
-			console.log(contacts);
-			console.log(transaction);
+		if (myProfile !== "" && contacts !== "" && transactionRequest !== "") {
+			//setUserRequestingPayment(transactionRequest.userRequestingPayment);
+			// setAccountPaymentTo(myProfile.accounts.filter(acc => acc.id === transactionRequest.accountPaymentTo.id)[0]);
 
-			transaction.payingAccount
-				? setPayingAccount(
-						myProfile.accounts.filter(
-							(acc) => acc.id === transaction.payingAccount.id
-						)[0]
-				  )
-				: setPayingAccount("");
-			const tempRecivingProfile = contacts
-				.map((contactsTemp) => contactsTemp.friend)
-				.filter((friend) => friend.id === transaction.receivingProfile.id)[0];
-			tempRecivingProfile
-				? setReceivingProfile(tempRecivingProfile)
-				: setReceivingProfile("");
-			tempRecivingProfile
-				? setReceivingAccount(
-						tempRecivingProfile.accounts.filter(
-							(acc) => acc.id === transaction.receivingAccount.id
-						)[0]
-				  )
-				: setReceivingAccount("");
-			setQuickReceiver(transaction.quickReceiver);
-			setDescription(transaction.description);
-			setDueDate(formatDate(transaction.dueDate));
-			setAmount(transaction.amount);
-			setCurrency(transaction.currency);
+			// const tempRecivingProfile = contacts.map(contactsTemp => contactsTemp.friend)
+			//                                     .filter(friend => friend.id === transactionRequest.userApprovingPayment.id)[0];
+			// setUserApprovingPayment(tempRecivingProfile)
+
+			setDescription(transactionRequest.description);
+			setDueDate(formatDate(transactionRequest.dueDate));
+			setAmount(transactionRequest.amount);
+			setCurrency(transactionRequest.currency);
 		}
-	}, [myProfile, contacts, transaction]);
+	}, [myProfile, contacts, transactionRequest]);
 
 	const onSubmit = (e) => {
 		e.preventDefault();
 
-		const newTransaction = {
-			id: transactionId !== "new" ? transactionId : "",
-			payingAccount: payingAccount === "" ? null : payingAccount,
-			receivingProfile: receivingProfile === "" ? null : receivingProfile,
-			receivingAccount: receivingAccount === "" ? null : receivingAccount,
-			quickReceiver: quickReceiver,
+		const newTransactionRequest = {
+			id: transactionRequestId !== "new" ? transactionRequestId : "",
+
+			userRequestingPayment:
+				userRequestingPayment === "" ? null : userRequestingPayment,
+			userApprovingPayment:
+				userApprovingPayment === "" ? null : userApprovingPayment,
+			accountPaymentTo: accountPaymentTo === "" ? null : accountPaymentTo,
 			description: description,
 			dueDate: dueDate,
 			amount: +amount,
 			currency: currency,
 		};
 
-		saveTransaction(newTransaction);
+		saveTransactionRequest(newTransactionRequest);
 		history.push("/payments");
 	};
 
 	return (
 		<>
-			<h3>New Transaction</h3>
+			<h3>New Transaction Request</h3>
 			<Container component="main" maxWidth="xs">
 				<div className={classes.paper}>
 					{myProfile === "" ? (
@@ -151,16 +143,34 @@ export default function EditTransaction() {
 					) : (
 						<form className={classes.form} noValidate onSubmit={onSubmit}>
 							<Grid container spacing={2}>
+								{transactionRequestId !== "new" && (
+									<Grid item xs={12}>
+										<TextField
+											select
+											label="User requesting payments"
+											value={userRequestingPayment || ""}
+											onChange={(e) => setUserRequestingPayment(e.target.value)}
+											name="userRequestingPayment"
+											variant="outlined"
+											id="userRequestingPayment"
+											fullWidth
+										>
+											{userRequestingPayment.firstName}{" "}
+											{userRequestingPayment.lastName}
+										</TextField>
+									</Grid>
+								)}
+
 								<Grid item xs={12}>
 									<TextField
 										select
-										value={payingAccount || ""}
-										onChange={(e) => setPayingAccount(e.target.value)}
-										name="payingAccount"
+										value={accountPaymentTo || ""}
+										onChange={(e) => setAccountPaymentTo(e.target.value)}
+										name="accountPaymentTo"
 										variant="outlined"
 										fullWidth
-										id="payingAccount"
-										label="Paying Account"
+										id="accountPaymentTo"
+										label="Payment to account"
 										autoFocus
 									>
 										{myProfile.accounts.map((account) => (
@@ -173,12 +183,12 @@ export default function EditTransaction() {
 								<Grid item xs={12}>
 									<TextField
 										select
-										label="Reciving Profile"
-										value={receivingProfile || ""}
-										onChange={(e) => setReceivingProfile(e.target.value)}
-										name="receivingProfile"
+										label="Send request to"
+										value={userApprovingPayment || ""}
+										onChange={(e) => setUserApprovingPayment(e.target.value)}
+										name="userApprovingPayment"
 										variant="outlined"
-										id="receivingProfile"
+										id="userApprovingPayment"
 										fullWidth
 									>
 										{contacts
@@ -189,39 +199,6 @@ export default function EditTransaction() {
 												</MenuItem>
 											))}
 									</TextField>
-								</Grid>
-								<Grid item xs={12}>
-									<TextField
-										select
-										label="Reciving Account"
-										value={receivingAccount || ""}
-										onChange={(e) => setReceivingAccount(e.target.value)}
-										name="receivingAccount"
-										variant="outlined"
-										id="receivingAccount"
-										fullWidth
-									>
-										{receivingProfile !== undefined &&
-										receivingProfile !== "" &&
-										receivingProfile.accounts !== undefined
-											? receivingProfile.accounts.map((account) => (
-													<MenuItem key={account.id} value={account}>
-														{account.name} {account.bankName}
-													</MenuItem>
-											  ))
-											: ""}
-									</TextField>
-								</Grid>
-								<Grid item xs={12}>
-									<TextField
-										value={quickReceiver || ""}
-										onChange={(e) => setQuickReceiver(e.target.value)}
-										name="quickReceiver"
-										variant="outlined"
-										fullWidth
-										id="quickReceiver"
-										label="Quick receiver"
-									/>
 								</Grid>
 								<Grid item xs={12}>
 									<TextField
