@@ -18,7 +18,7 @@ export const GlobalContext = createContext(initialState);
 
 export const GlobalProvider = ({ children }) => {
 	const [state, dispatch] = useReducer(AppReducer, initialState);
-	const baseUrl = "http://35.157.21.203:8081/";
+	const baseUrl = "https://35.157.21.203:8081/";
 
 	function getMyProfile() {
 		try {

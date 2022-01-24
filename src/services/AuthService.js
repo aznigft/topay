@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://35.157.21.203:8081/";
+const API_URL = "https://35.157.21.203:8081/";
 
 class AuthService {
 	async login(username, password) {
