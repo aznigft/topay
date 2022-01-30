@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function EditTransactionRequest() {
 	const classes = useStyles();
-	const { transactionRequestId, transactionType } = useParams();
+	const { transactionRequestId } = useParams();
 
 	const [userRequestingPayment, setUserRequestingPayment] = useState("");
 	const [accountPaymentTo, setAccountPaymentTo] = useState("");

@@ -34,14 +34,23 @@ const useStyles = makeStyles((theme) => ({
 
 export default function TransactionRequestCardReceived({ request, confirmed }) {
 	const classes = useStyles();
-	const { deleteTransaction, confirmTransactionRequest } =
-		useContext(GlobalContext);
+	const {
+		deleteTransaction,
+		confirmTransactionRequest,
+		rejectTransactionRequest,
+		dateFormat,
+	} = useContext(GlobalContext);
 
-	let history = useHistory();
+	//let history = useHistory();
 
 	const handleConfirmRequest = (event, requestId) => {
 		confirmTransactionRequest(requestId);
-		history.push("/payments");
+		// history.push("/payments");
+	};
+
+	const handleRejectRequest = (event, requestId) => {
+		rejectTransactionRequest(requestId);
+		//Dopisać uaktualnienie strony
 	};
 
 	return (
@@ -78,7 +87,11 @@ export default function TransactionRequestCardReceived({ request, confirmed }) {
 								{request.amount} {request.currency}
 							</Typography>
 							<Typography variant="body2" color="textSecondary">
-								Due date: {new Date(request.dueDate).toLocaleDateString()}
+								Due date:{" "}
+								{new Date(request.dueDate).toLocaleDateString(
+									"en-GB",
+									dateFormat
+								)}
 							</Typography>
 						</Grid>
 						{confirmed ? (
@@ -94,7 +107,12 @@ export default function TransactionRequestCardReceived({ request, confirmed }) {
 									<Button onClick={(e) => handleConfirmRequest(e, request.id)}>
 										Confirm
 									</Button>
-									<Button color="primary">Reject</Button>
+									<Button
+										color="primary"
+										onClick={(e) => handleRejectRequest(e, request.id)}
+									>
+										Reject
+									</Button>
 									<Button
 										color="secondary"
 										onClick={() => deleteTransaction(request.id)}

@@ -8,18 +8,24 @@ const initialState = {
 	transactionRequestsReceived: [],
 	transactionRequestsSent: [],
 	transactionRequestsReceivedAndConfirmed: [],
+	transactionRequestsReceivedAndRejected: [],
 	contacts: [],
 	myProfile: null,
 	error: null,
 	loading: true,
+	dateFormat: {
+		year: "numeric",
+		month: "short",
+		day: "numeric",
+	},
 };
 
 export const GlobalContext = createContext(initialState);
 
 export const GlobalProvider = ({ children }) => {
 	const [state, dispatch] = useReducer(AppReducer, initialState);
-	const baseUrl = "https://35.157.21.203:8843/";
-	//const baseUrl = "https://localhost:8843/";
+	//const baseUrl = "https://35.157.21.203:8843/";
+	const baseUrl = "https://localhost:8843/";
 
 	function getMyProfile() {
 		try {
@@ -49,14 +55,12 @@ export const GlobalProvider = ({ children }) => {
 
 	async function saveBankAccount(bankAccount) {
 		try {
-			let res;
-
 			if (!bankAccount.id) {
-				res = await axios.post(baseUrl + "myProfile/accounts", bankAccount, {
+				await axios.post(baseUrl + "myProfile/accounts", bankAccount, {
 					headers: authHeader(),
 				});
 			} else {
-				res = await axios.put(baseUrl + "myProfile/accounts", bankAccount, {
+				await axios.put(baseUrl + "myProfile/accounts", bankAccount, {
 					headers: authHeader(),
 				});
 			}
@@ -74,10 +78,9 @@ export const GlobalProvider = ({ children }) => {
 
 	async function deleteAccount(accountId) {
 		try {
-			const res = await axios.delete(
-				baseUrl + "myProfile/accounts/" + accountId,
-				{ headers: authHeader() }
-			);
+			await axios.delete(baseUrl + "myProfile/accounts/" + accountId, {
+				headers: authHeader(),
+			});
 
 			const tempMyProfile = await getMyProfile();
 			return tempMyProfile;
@@ -183,6 +186,25 @@ export const GlobalProvider = ({ children }) => {
 		// })
 	}
 
+	async function setTransactionAsPaid(transactionId) {
+		try {
+			const res = await axios.get(
+				baseUrl + "transactions/" + transactionId + "/setPayment",
+				{ headers: authHeader() }
+			);
+
+			if (res.data === true) {
+				getTransactions();
+			}
+		} catch (err) {
+			console.log(err);
+			dispatch({
+				type: "TRANSACTION_ERROR",
+				payload: err.response.error,
+			});
+		}
+	}
+
 	async function saveTransactionRequest(transactionRequest) {
 		let res;
 
@@ -218,9 +240,6 @@ export const GlobalProvider = ({ children }) => {
 			const res = await axios.get(baseUrl + "transaction-requests", {
 				headers: authHeader(),
 			});
-
-			console.log("requests");
-			console.log(res.data);
 
 			dispatch({
 				type: "GET_TRANSACTION_REQUESTS",
@@ -261,6 +280,19 @@ export const GlobalProvider = ({ children }) => {
 	async function confirmTransactionRequest(transactionRequestId) {
 		const res = await axios.get(
 			baseUrl + "transaction-requests/" + transactionRequestId + "/confirm",
+			{
+				headers: authHeader(),
+			}
+		);
+		if (!!res.daya) {
+			getTransactions();
+			getTransactionRequests();
+		}
+	}
+
+	async function rejectTransactionRequest(transactionRequestId) {
+		const res = await axios.get(
+			baseUrl + "transaction-requests/" + transactionRequestId + "/reject",
 			{
 				headers: authHeader(),
 			}
@@ -342,10 +374,13 @@ export const GlobalProvider = ({ children }) => {
 				transactionRequestsSent: state.transactionRequestsSent,
 				transactionRequestsReceivedAndConfirmed:
 					state.transactionRequestsReceivedAndConfirmed,
+				transactionRequestsReceivedAndRejected:
+					state.transactionRequestsReceivedAndRejected,
 				contacts: state.contacts,
 				error: state.error,
 				loading: state.loading,
 				myProfile: state.myProfile,
+				dateFormat: state.dateFormat,
 				getMyProfile,
 				saveBankAccount,
 				deleteAccount,
@@ -354,10 +389,12 @@ export const GlobalProvider = ({ children }) => {
 				deleteTransaction,
 				saveTransaction,
 				editTransaction,
+				setTransactionAsPaid,
 				getTransactionRequests,
 				getTransactionRequest,
 				saveTransactionRequest,
 				confirmTransactionRequest,
+				rejectTransactionRequest,
 				getContacts,
 				addContact,
 				deleteContact,

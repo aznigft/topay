@@ -48,10 +48,16 @@ export default function appReducer(state, action) {
 				...state,
 				loding: false,
 				transactionRequestsReceived: action.payload.filter(
-					(req) => req.received === true && req.dateOfApproval === undefined
+					(req) =>
+						req.received === true &&
+						req.dateOfApproval === undefined &&
+						req.dateOfRejection === undefined
 				),
 				transactionRequestsReceivedAndConfirmed: action.payload.filter(
 					(req) => req.received === true && req.dateOfApproval
+				),
+				transactionRequestsReceivedAndRejected: action.payload.filter(
+					(req) => req.received === true && req.dateOfRejection
 				),
 				transactionRequestsSent: action.payload.filter(
 					(req) => req.received === false

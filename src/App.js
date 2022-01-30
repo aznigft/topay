@@ -33,13 +33,13 @@ function App() {
 						<SignUp setNavState={setNavState} />
 					</Route>
 					<ProtectedRoute
-						path="/payments"
+						path="/payments/:tab?"
 						component={Payments}
 						setNavState={setNavState}
 						navState={navState}
 					/>
 					<ProtectedRoute
-						path="/editTransaction/:transactionType?/:transactionId"
+						path="/editTransaction/:transactionId"
 						component={EditTransaction}
 						setNavState={setNavState}
 						navState={navState}

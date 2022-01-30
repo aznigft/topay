@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function TransactionRequestCardSent({ request }) {
 	const classes = useStyles();
-	const { deleteTransaction } = useContext(GlobalContext);
+	const { deleteTransaction, dateFormat } = useContext(GlobalContext);
 
 	let history = useHistory();
 
@@ -71,31 +71,75 @@ export default function TransactionRequestCardSent({ request }) {
 							>
 								{request.amount} {request.currency}
 							</Typography>
-							<Typography variant="body2" color="textSecondary">
-								Due date: {new Date(request.dueDate).toLocaleDateString()}
+							<Typography variant="body2" color="textSecondary" align="right">
+								Due date:{" "}
+								{new Date(request.dueDate).toLocaleDateString(
+									"en-GB",
+									dateFormat
+								)}
 							</Typography>
+							{request.dateOfApproval && !request.paymentDate ? (
+								<Typography variant="body2" color="textSecondary" align="right">
+									Confirmation:{" "}
+									{new Date(request.dateOfApproval).toLocaleDateString(
+										"en-GB",
+										dateFormat
+									)}
+								</Typography>
+							) : (
+								""
+							)}
+							{request.dateOfRejection ? (
+								<Typography variant="body2" color="textSecondary" align="right">
+									Rejection:{" "}
+									{new Date(request.dateOfRejection).toLocaleDateString(
+										"en-GB",
+										dateFormat
+									)}
+								</Typography>
+							) : (
+								""
+							)}
+							{request.paymentDate ? (
+								<Typography variant="body2" color="textSecondary" align="right">
+									Payment:{" "}
+									{new Date(request.paymentDate).toLocaleDateString(
+										"en-GB",
+										dateFormat
+									)}
+								</Typography>
+							) : (
+								""
+							)}
 						</Grid>
-						<Grid item xs={12}>
-							<ButtonGroup
-								variant="text"
-								size="small"
-								fullWidth={true}
-								aria-label="text primary button group"
-							>
-								<Button
-									onClick={() => history.push("/editTransaction/" + request.id)}
+
+						{request.dateOfApproval || request.dateOfRejection ? (
+							""
+						) : (
+							<Grid item xs={12}>
+								<ButtonGroup
+									variant="text"
+									size="small"
+									fullWidth={true}
+									aria-label="text primary button group"
 								>
-									Edit
-								</Button>
-								<Button color="primary">Withdraw</Button>
-								<Button
-									color="secondary"
-									onClick={() => deleteTransaction(request.id)}
-								>
-									Delete
-								</Button>
-							</ButtonGroup>
-						</Grid>
+									<Button
+										onClick={() =>
+											history.push("/editTransaction/" + request.id)
+										}
+									>
+										Edit
+									</Button>
+									<Button color="primary">Withdraw</Button>
+									<Button
+										color="secondary"
+										onClick={() => deleteTransaction(request.id)}
+									>
+										Delete
+									</Button>
+								</ButtonGroup>
+							</Grid>
+						)}
 					</Grid>
 				</Grid>
 			</Paper>

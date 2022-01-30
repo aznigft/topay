@@ -25,7 +25,7 @@ function formatDate(date) {
 
 const useStyles = makeStyles((theme) => ({
 	paper: {
-		marginTop: "64px",
+		marginTop: "30px",
 		display: "flex",
 		flexDirection: "column",
 		alignItems: "center",
@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function EditTransaction() {
 	const classes = useStyles();
-	const { transactionId, transactionType } = useParams();
+	const { transactionId } = useParams();
 
 	const [payingAccount, setPayingAccount] = useState("");
 	const [receivingProfile, setReceivingProfile] = useState("");
@@ -138,7 +138,7 @@ export default function EditTransaction() {
 		};
 
 		saveTransaction(newTransaction);
-		history.push("/payments");
+		history.push("/payments/transactions");
 	};
 
 	return (

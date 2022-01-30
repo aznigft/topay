@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
+import { useHistory, useParams } from "react-router-dom";
 import { GlobalContext } from "../context/GlobalState";
 import { TransactionList } from "./TransactionList";
 import { TransactionRequests } from "./TransactionRequests";
@@ -48,19 +49,27 @@ const useStyles = makeStyles((theme) => ({
 
 export const Payments = ({ setNavState }) => {
 	const { getTransactions, getTransactionRequests } = useContext(GlobalContext);
+	const { tab } = useParams();
 	const classes = useStyles();
+	let history = useHistory();
 
 	const [selectedTab, setSelectedTab] = useState("transactions");
 
 	useEffect(() => {
+		console.log("Selected tab " + tab);
+		if (!tab) {
+			history.push("/payments/transactions");
+		}
 		getTransactions();
 		getTransactionRequests();
 		setNavState(1);
+		setSelectedTab(tab);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [tab]);
 
 	const handleTabChange = (event, newValue) => {
-		setSelectedTab(newValue);
+		history.push("/payments/" + newValue);
+		//	setSelectedTab(newValue);
 	};
 
 	return (

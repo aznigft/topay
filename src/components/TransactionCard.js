@@ -7,6 +7,7 @@ import Typography from "@mui/material/Typography";
 import { Button } from "@mui/material";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import { useHistory } from "react-router-dom";
+import PayTransactionDialogv2 from "./PayTransactionDialogv2";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -34,9 +35,17 @@ const useStyles = makeStyles((theme) => ({
 
 export default function TransactionCard({ transaction }) {
 	const classes = useStyles();
-	const { deleteTransaction } = useContext(GlobalContext);
+	const { deleteTransaction, dateFormat } = useContext(GlobalContext);
+
+	const [dialogOpen, setDialogOpen] = React.useState(false);
 
 	let history = useHistory();
+
+	const headerName = transaction.quickReceiver
+		? transaction.quickReceiver
+		: transaction.receivingProfile.firstName +
+		  " " +
+		  transaction.receivingProfile.lastName;
 
 	return (
 		<div className={classes.root}>
@@ -51,8 +60,7 @@ export default function TransactionCard({ transaction }) {
 									paragraph="true"
 									fontWeight="600"
 								>
-									{transaction.receivingProfile.firstName}{" "}
-									{transaction.receivingProfile.lastName}
+									{headerName}
 								</Typography>
 								<Typography variant="body2">
 									{transaction.description}
@@ -71,9 +79,10 @@ export default function TransactionCard({ transaction }) {
 							</Typography>
 							<Typography variant="body2" color="textSecondary">
 								Due date:{" "}
-								{new Date(
-									transaction.dueDate
-								).toLocaleDateString()}
+								{new Date(transaction.dueDate).toLocaleDateString(
+									"en-GB",
+									dateFormat
+								)}
 							</Typography>
 						</Grid>
 						<Grid item xs={12}>
@@ -85,19 +94,22 @@ export default function TransactionCard({ transaction }) {
 							>
 								<Button
 									onClick={() =>
-										history.push(
-											"/editTransaction/" + transaction.id
-										)
+										history.push("/editTransaction/" + transaction.id)
 									}
 								>
 									Edit
 								</Button>
-								<Button color="primary">Pay</Button>
+								<Button color="primary" onClick={() => setDialogOpen(true)}>
+									Pay
+								</Button>
+								<PayTransactionDialogv2
+									dialogOpen={dialogOpen}
+									setDialogOpen={setDialogOpen}
+									transaction={transaction}
+								/>
 								<Button
 									color="secondary"
-									onClick={() =>
-										deleteTransaction(transaction.id)
-									}
+									onClick={() => deleteTransaction(transaction.id)}
 								>
 									Delete
 								</Button>
